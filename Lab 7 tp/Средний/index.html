@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA Список задач</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Менеджер задач (To-Do SPA)</h1>
+        </header>
+
+        <nav class="tabs-nav" aria-label="Вкладки фильтрации задач">
+            <button class="tab-btn active" data-filter="all">Все</button>
+            <button class="tab-btn" data-filter="active">Активные</button>
+            <button class="tab-btn" data-filter="completed">Выполненные</button>
+        </nav>
+
+        <main id="content" aria-live="polite" class="content-container">
+            <!-- Динамический контент задач -->
+        </main>
+
+        <footer>
+            <p>&copy; 2026. Лабораторная работа №7 (Средний уровень)</p>
+        </footer>
+    </div>
+
+    <script src="app.js" defer></script>
+</body>
+</html>

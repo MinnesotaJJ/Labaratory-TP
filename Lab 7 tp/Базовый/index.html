@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA Визитка студента</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Визитка студента</h1>
+        </header>
+
+        <!-- Навигация по вкладкам -->
+        <nav class="tabs-nav" aria-label="Навигация по визитке">
+            <button class="tab-btn active" data-tab="about">О себе</button>
+            <button class="tab-btn" data-tab="skills">Навыки</button>
+            <button class="tab-btn" data-tab="contacts">Контакты</button>
+        </nav>
+
+        <!-- Контейнер контента -->
+        <main id="content" aria-live="polite" class="content-container">
+            <!-- Динамический контент -->
+        </main>
+
+        <footer>
+            <p>&copy; 2026. Лабораторная работа №7 (Базовый уровень)</p>
+        </footer>
+    </div>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
