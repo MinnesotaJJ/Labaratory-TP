@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторная работа №8 — JSON & Web Storage</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-theme="light" data-fontsize="medium">
+  <div class="container">
+    <header>
+      <h1>Лабораторная работа №8</h1>
+      <p>Работа с JSON, LocalStorage и SessionStorage</p>
+    </header>
+
+    <!-- Раздел 1: Базовый уровень — Настройки темы -->
+    <section class="card" id="level-basic">
+      <h2>1. Настройки интерфейса</h2>
+      <div class="form-group row">
+        <label for="theme-select">Тема оформления:</label>
+        <select id="theme-select">
+          <option value="light">Светлая</option>
+          <option value="dark">Тёмная</option>
+        </select>
+
+        <label for="fontsize-select">Размер шрифта:</label>
+        <select id="fontsize-select">
+          <option value="small">Маленький</option>
+          <option value="medium" selected>Средний</option>
+          <option value="large">Большой</option>
+        </select>
+      </div>
+      <small class="hint">Настройки автоматически сохраняются в <code>localStorage</code>.</small>
+    </section>
+
+    <!-- Раздел 2: Средний уровень — To-Do Список -->
+    <section class="card" id="level-medium">
+      <h2>2. Список задач </h2>
+      <div class="form-group row">
+        <input type="text" id="todo-input" placeholder="Введите название задачи..." autocomplete="off">
+        <button id="todo-add-btn" class="btn primary">Добавить</button>
+      </div>
+
+      <div class="filter-group">
+        <span>Фильтр:</span>
+        <button class="btn filter-btn active" data-filter="all">Все</button>
+        <button class="btn filter-btn" data-filter="active">Активные</button>
+        <button class="btn filter-btn" data-filter="completed">Завершенные</button>
+      </div>
+
+      <ul id="todo-list" class="todo-list"></ul>
+      <small class="hint">Массив задач сохраняется в <code>localStorage</code>.</small>
+    </section>
+
+    <!-- Раздел 3: — Мастер заполнения заявки -->
+    <section class="card" id="level-advanced">
+      <h2>3. Мастер заполнения заявки </h2>
+      
+      <!-- Индикатор шагов -->
+      <div class="wizard-steps">
+        <div class="step-indicator active" id="step-ind-1">Шаг 1: Личные данные</div>
+        <div class="step-indicator" id="step-ind-2">Шаг 2: Детали заявки</div>
+        <div class="step-indicator" id="step-ind-3">Шаг 3: Подтверждение</div>
+      </div>
+
+      <!-- Форма мастера -->
+      <form id="wizard-form" onsubmit="return false;">
+        <!-- Шаг 1 -->
+        <div class="wizard-step-content active" id="wizard-step-1">
+          <div class="form-group">
+            <label for="applicant-name">ФИО заявителя *</label>
+            <input type="text" id="applicant-name" placeholder="Иванов Иван Иванович">
+          </div>
+          <div class="form-group">
+            <label for="applicant-email">Email *</label>
+            <input type="email" id="applicant-email" placeholder="example@mail.com">
+          </div>
+          <div class="btn-group align-right">
+            <button type="button" class="btn primary" id="wizard-next-1">Далее &rarr;</button>
+          </div>
+        </div>
+
+        <!-- Шаг 2 -->
+        <div class="wizard-step-content" id="wizard-step-2">
+          <div class="form-group">
+            <label for="app-category">Категория обращения *</label>
+            <select id="app-category">
+              <option value="">-- Выберите категорию --</option>
+              <option value="Техническая поддержка">Техническая поддержка</option>
+              <option value="Обучение">Обучение</option>
+              <option value="Консультация">Консультация</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="app-description">Описание заявки *</label>
+            <textarea id="app-description" rows="3" placeholder="Опишите суть вашего вопроса..."></textarea>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn secondary" id="wizard-prev-2">&larr; Назад</button>
+            <button type="button" class="btn primary" id="wizard-next-2">Далее &rarr;</button>
+          </div>
+        </div>
+
+        <!-- Шаг 3 -->
+        <div class="wizard-step-content" id="wizard-step-3">
+          <h3>Проверьте введенные данные:</h3>
+          <div class="summary-box" id="wizard-summary"></div>
+          <div class="btn-group">
+            <button type="button" class="btn secondary" id="wizard-prev-3">&larr; Назад</button>
+            <button type="button" class="btn success" id="wizard-submit">Отправить заявку</button>
+          </div>
+        </div>
+      </form>
+      <small class="hint">Черновик заявки сохраняется в <code>sessionStorage</code>, а итоговый список отправленных заявок — в <code>localStorage</code>.</small>
+
+      <hr class="divider">
+      
+      <h3>Отправленные заявки</h3>
+      <ul id="applications-list" class="app-list"></ul>
+    </section>
+  </div>
+</body>
+</html>
