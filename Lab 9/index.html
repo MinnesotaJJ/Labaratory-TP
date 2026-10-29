@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа №9: Дашборд задач</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Дашборд задач (Fetch API / AJAX)</h1>
+
+        <!-- Блок управления и фильтрации -->
+        <div class="controls">
+            <button id="load-btn">Загрузить задачи</button>
+            
+            <div class="filter-group">
+                <label for="status-filter">Статус:</label>
+                <select id="status-filter" disabled>
+                    <option value="all">Все задачи</option>
+                    <option value="completed">Выполненные</option>
+                    <option value="uncompleted">Невыполненные</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="user-filter">ID Пользователя:</label>
+                <select id="user-filter" disabled>
+                    <option value="all">Все пользователи</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Творческое доп. задание и статус -->
+        <div class="meta-info">
+            <p id="status" role="status">Данные не загружены. Нажмите «Загрузить».</p>
+            <p id="perf-metric" class="hidden">Время ответа сервера: <span id="resp-time">0</span> мс</p>
+        </div>
+
+        <!-- Статистика (Повышенный уровень) -->
+        <div id="stats-panel" class="stats-panel hidden">
+            <div class="stat-card">
+                <h3>Всего</h3>
+                <p id="stat-total">0</p>
+            </div>
+            <div class="stat-card completed">
+                <h3>Выполненные</h3>
+                <p id="stat-completed">0</p>
+            </div>
+            <div class="stat-card pending">
+                <h3>В процессе</h3>
+                <p id="stat-pending">0</p>
+            </div>
+        </div>
+
+        <!-- Список задач (Базовый + Средний уровни) -->
+        <ul id="todo-list" class="todo-grid"></ul>
+    </div>
+</body>
+</html>
