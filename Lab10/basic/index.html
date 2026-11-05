@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор геометрии</title><link rel="stylesheet" href="../shared.css"></head>
+<body><main class="app">
+<a class="top-link" href="../index.html">← На главную</a>
+<h1>Калькулятор геометрии</h1>
+<p class="muted">Вариант №4 · Базовый уровень</p>
+<section class="panel">
+<h2>Прямоугольник</h2>
+<div class="row">
+<div class="field"><label for="rect-width">Ширина</label><input id="rect-width" type="number" min="0" step="any" placeholder="Например, 5"></div>
+<div class="field"><label for="rect-height">Высота</label><input id="rect-height" type="number" min="0" step="any" placeholder="Например, 3"></div>
+<button id="rect-calc">Рассчитать</button>
+</div><div id="rect-result" class="result" aria-live="polite">Введите размеры прямоугольника.</div>
+</section>
+<section class="panel">
+<h2>Круг</h2>
+<div class="row">
+<div class="field"><label for="radius">Радиус</label><input id="radius" type="number" min="0" step="any" placeholder="Например, 4"></div>
+<button id="circle-calc">Рассчитать</button>
+</div><div id="circle-result" class="result" aria-live="polite">Введите радиус круга.</div>
+</section>
+<script type="module" src="./src/main.js"></script>
+</main></body></html>

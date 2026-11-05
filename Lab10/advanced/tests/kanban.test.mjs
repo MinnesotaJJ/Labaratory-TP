@@ -1,0 +1,16 @@
+import assert from "node:assert/strict";
+import { COLUMNS, getNextColumn, getPreviousColumn, isValidColumn } from "../src/modules/columns.js";
+import { loadTasks, getTasks, addTask, moveTask, deleteTask } from "../src/modules/tasks.js";
+assert.equal(COLUMNS.length, 3);
+assert.equal(getNextColumn("todo"), "doing");
+assert.equal(getPreviousColumn("todo"), null);
+assert.equal(isValidColumn("unknown"), false);
+loadTasks([]);
+const task = addTask("Сделать проект");
+assert.equal(task.column, "todo");
+assert.equal(moveTask(task.id, "doing"), true);
+assert.equal(getTasks()[0].column, "doing");
+assert.equal(moveTask(task.id, "wrong"), false);
+assert.throws(() => addTask(" "), /Введите/);
+assert.equal(deleteTask(task.id), true);
+console.log("ADVANCED: все 9 проверок пройдены.");

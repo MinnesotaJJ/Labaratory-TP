@@ -1,0 +1,12 @@
+import assert from "node:assert/strict";
+import { getTasks, addTask, removeTask, toggleTask } from "../src/modules/tasks.js";
+assert.equal(getTasks().length, 0);
+const task = addTask("Подготовить лабораторную");
+assert.equal(task.title, "Подготовить лабораторную");
+assert.equal(getTasks().length, 1);
+assert.throws(() => addTask("   "), /пустым/);
+assert.equal(toggleTask(task.id), true);
+assert.equal(getTasks()[0].completed, true);
+assert.equal(removeTask(task.id), true);
+assert.equal(getTasks().length, 0);
+console.log("MEDIUM: все 7 проверок пройдены.");

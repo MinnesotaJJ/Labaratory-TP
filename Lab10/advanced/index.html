@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban-доска</title><link rel="stylesheet" href="../shared.css"></head>
+<body><main class="app">
+<a class="top-link" href="../index.html">← На главную</a>
+<h1>Kanban-доска</h1><p class="muted">Вариант №19 · Повышенный уровень</p>
+<section class="panel">
+<form id="kanban-form" class="row">
+<div class="field"><label for="kanban-title">Название задачи</label><input id="kanban-title" maxlength="100" placeholder="Например, подготовить отчёт" required></div>
+<button type="submit">Создать карточку</button>
+</form><p id="kanban-message" class="muted" aria-live="polite"></p>
+</section>
+<section class="kanban" id="kanban-board">
+<div class="kanban-column"><h3>К выполнению</h3><div id="todo-list"></div></div>
+<div class="kanban-column"><h3>В процессе</h3><div id="doing-list"></div></div>
+<div class="kanban-column"><h3>Готово</h3><div id="done-list"></div></div>
+</section>
+<script type="module" src="./src/main.js"></script>
+</main></body></html>

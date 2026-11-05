@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Список задач</title><link rel="stylesheet" href="../shared.css"></head>
+<body><main class="app">
+<a class="top-link" href="../index.html">← На главную</a>
+<h1>Список задач</h1><p class="muted">Вариант №8 · Средний уровень</p>
+<section class="panel">
+<form id="task-form" class="row">
+<div class="field"><label for="task-input">Новая задача</label><input id="task-input" maxlength="100" placeholder="Что нужно сделать?" required></div>
+<button type="submit">Добавить</button>
+</form><p id="task-message" class="muted" aria-live="polite"></p>
+</section>
+<section class="panel">
+<div class="row" style="justify-content:space-between"><h2>Мои задачи</h2><span id="task-count" class="muted"></span></div>
+<ul id="task-list" class="task-list"></ul>
+<p id="empty-message" class="muted">Пока задач нет.</p>
+</section>
+<script type="module" src="./src/main.js"></script>
+</main></body></html>

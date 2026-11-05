@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";
+import { rectangleArea, rectanglePerimeter, circleArea, circleCircumference, isPositiveNumber } from "../src/modules/geometry.js";
+assert.equal(rectangleArea(5, 3), 15);
+assert.equal(rectanglePerimeter(5, 3), 16);
+assert.equal(circleArea(1).toFixed(2), "3.14");
+assert.equal(circleCircumference(2).toFixed(2), "12.57");
+assert.equal(isPositiveNumber(0), false);
+assert.equal(isPositiveNumber(-2), false);
+assert.equal(isPositiveNumber(4), true);
+console.log("BASIC: все 7 проверок пройдены.");
