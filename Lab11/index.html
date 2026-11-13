@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторная работа № 11 — React (Props & State)</title>
+
+  <!-- React 18, ReactDOM и Babel (для работы JSX прямо в браузере без сборки) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Шрифты: Cormorant Garamond (антиква) и Plus Jakarta Sans (гротеск) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Стили: Warm Editorial & Botanical Paper (без неона и кислотных тонов) */
+    :root {
+      --bg-paper: #F7F4EE;
+      --bg-card: #FFFDF9;
+      --bg-subtle: #EFECE4;
+      --text-ink: #1F2421;
+      --text-muted: #5C635E;
+      --accent-sage: #2E5A44;
+      --accent-sage-light: #E4EDE8;
+      --accent-terracotta: #C2593F;
+      --accent-terracotta-light: #F9EAE6;
+      --accent-ochre: #C88A2E;
+      --accent-ochre-light: #FBF3E4;
+      --border-line: #DCD6C8;
+      --shadow-soft: 0 10px 25px -8px rgba(31, 36, 33, 0.07);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--text-ink);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      line-height: 1.55;
+      padding: 32px 20px 60px;
+      background-image: radial-gradient(var(--border-line) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .header-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-line);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg, var(--accent-sage), var(--accent-ochre), var(--accent-terracotta));
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-sage);
+    }
+
+    .pill-badge {
+      background: var(--accent-sage-light);
+      color: var(--accent-sage);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .title-serif {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-ink);
+    }
+
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-line);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--accent-sage);
+      color: var(--text-ink);
+    }
+
+    .tab-btn.active {
+      background: var(--accent-sage);
+      color: #FFFDF9;
+      border-color: var(--accent-sage);
+      box-shadow: 0 4px 12px rgba(46, 90, 68, 0.2);
+    }
+
+    .tab-level-tag {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.07);
+    }
+
+    .tab-btn.active .tab-level-tag {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .workspace {
+      background: var(--bg-card);
+      border: 1px solid var(--border-line);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-soft);
+      min-height: 480px;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary { background: var(--accent-sage); color: #FFFDF9; }
+    .btn-primary:hover { background: #234735; }
+
+    .btn-terracotta { background: var(--accent-terracotta); color: #FFFDF9; }
+    .btn-terracotta:hover { background: #A54730; }
+
+    .btn-outline { background: #FFFDF9; border-color: var(--border-line); color: var(--text-ink); }
+    .btn-outline:hover { background: var(--bg-subtle); }
+
+    .btn-sm { padding: 5px 11px; font-size: 0.8rem; }
+
+    .input {
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 9px 13px;
+      border: 1px solid var(--border-line);
+      border-radius: var(--radius-sm);
+      background: #FFFDF9;
+      color: var(--text-ink);
+    }
+
+    .input:focus { outline: none; border-color: var(--accent-sage); }
+
+    .sub-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-line);
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--accent-sage-light);
+      color: var(--accent-sage);
+    }
+
+    .tag-terra { background: var(--accent-terracotta-light); color: var(--accent-terracotta); }
+
+    .row-flex { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .space-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+
+    .alert-error {
+      background: var(--accent-terracotta-light);
+      color: var(--accent-terracotta);
+      border: 1px solid rgba(194, 89, 63, 0.3);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .table-clean {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-top: 12px;
+    }
+
+    .table-clean th, .table-clean td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-line);
+      text-align: left;
+    }
+
+    .table-clean th {
+      background: var(--bg-subtle);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .kanban-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .kanban-grid { grid-template-columns: 1fr; }
+    }
+
+    .kanban-col {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-line);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      min-height: 280px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ==========================================
+    // 1. БАЗОВЫЙ УРОВЕНЬ — Вариант 7: Карточка товара
+    // ==========================================
+    function ProductCard({ title, price, category, origin, onAction }) {
+      const [quantity, setQuantity] = useState(0);
+
+      const updateQty = (next) => {
+        setQuantity(next);
+        onAction();
+      };
+
+      return (
+        <article className="sub-card" style={{ maxWidth: '360px' }}>
+          <span className="tag-terra tag">{category}</span>
+          <h3 className="title-serif" style={{ fontSize: '1.4rem', margin: '8px 0 4px' }}>{title}</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginBottom: '14px' }}>{origin}</p>
+
+          <div className="space-between" style={{ borderTop: '1px dashed var(--border-line)', paddingTop: '12px' }}>
+            <div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--accent-sage)' }}>
+                {price.toLocaleString('ru-RU')} ₸
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                {quantity > 0 ? `Итого: ${(quantity * price).toLocaleString('ru-RU')} ₸` : 'Не выбрано'}
+              </div>
+            </div>
+
+            <div className="row-flex">
+              <button 
+                type="button" 
+                className="btn btn-outline btn-sm" 
+                onClick={() => updateQty(Math.max(0, quantity - 1))} 
+                disabled={quantity === 0}
+              >−</button>
+              <strong style={{ minWidth: '20px', textAlign: 'center' }}>{quantity}</strong>
+              <button 
+                type="button" 
+                className="btn btn-primary btn-sm" 
+                onClick={() => updateQty(quantity + 1)}
+              >+</button>
+            </div>
+          </div>
+        </article>
+      );
+    }
+
+    function Level1Catalog({ onAction }) {
+      return (
+        <div>
+          <div style={{ marginBottom: '20px' }}>
+            <span className="tag">Вариант 7 • Изолированное состояние</span>
+            <h2 className="title-serif" style={{ fontSize: '1.8rem', margin: '6px 0' }}>Каталог товаров с независимым счётчиком</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              Каждый экземпляр компонента <code>ProductCard</code> получает название и цену через <strong>props</strong>, а количество единиц хранит в собственном <strong>state</strong>.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+            <ProductCard title="Чайная пара «Терракота»" price={8500} category="Керамика" origin="Ручная лепка, матовая глазурь" onAction={onAction} />
+            <ProductCard title="Эфиопия Иргачефф, 250 г" price={6200} category="Кофе" origin="Светлая обжарка, ноты жасмина" onAction={onAction} />
+            <ProductCard title="Блокнот для эскизов А5" price={4800} category="Канцелярия" origin="Хлопковая бумага 160 г/м²" onAction={onAction} />
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // 2. СРЕДНИЙ УРОВЕНЬ — Вариант 8: Список задач
+    // ==========================================
+    function TodoItem({ id, text, completed, onToggle, onDelete }) {
+      return (
+        <li className="sub-card space-between" style={{ padding: '10px 14px', marginBottom: '8px', opacity: completed ? 0.7 : 1 }}>
+          <label className="row-flex" style={{ cursor: 'pointer', flex: 1 }}>
+            <input 
+              type="checkbox" 
+              checked={completed} 
+              onChange={() => onToggle(id)} 
+              style={{ width: '18px', height: '18px', accentColor: 'var(--accent-sage)' }} 
+            />
+            <span style={{ textDecoration: completed ? 'line-through' : 'none', fontWeight: 500 }}>{text}</span>
+          </label>
+          <button type="button" className="btn btn-outline btn-sm" onClick={() => onDelete(id)}>Удалить</button>
+        </li>
+      );
+    }
+
+    function Level2TodoList({ onAction }) {
+      const [todos, setTodos] = useState([
+        { id: 1, text: 'Подготовить схему потоков данных props/state', completed: true },
+        { id: 2, text: 'Реализовать проверку пустого ввода в TodoList', completed: false },
+        { id: 3, text: 'Провести 5 контрольных тестов для отчёта', completed: false }
+      ]);
+      const [input, setInput] = useState('');
+      const [error, setError] = useState('');
+
+      const handleAdd = (e) => {
+        e.preventDefault();
+        if (!input.trim()) {
+          setError('Пожалуйста, введите текст задачи — пустая строка не допускается!');
+          return;
+        }
+        setTodos([{ id: Date.now(), text: input.trim(), completed: false }, ...todos]);
+        setInput('');
+        setError('');
+        onAction();
+      };
+
+      const handleToggle = (id) => {
+        setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+        onAction();
+      };
+
+      const handleDelete = (id) => {
+        setTodos(todos.filter(t => t.id !== id));
+        onAction();
+      };
+
+      return (
+        <div style={{ maxWidth: '640px' }}>
+          <div style={{ marginBottom: '20px' }}>
+            <span className="tag">Вариант 8 • Формы & Валидация</span>
+            <h2 className="title-serif" style={{ fontSize: '1.8rem', margin: '6px 0' }}>Менеджер задач (TodoList)</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              Родительский компонент хранит массив задач в <strong>state</strong> и передаёт каждую задачу в дочерний <code>TodoItem</code> через <strong>props</strong>.
+            </p>
+          </div>
+
+          <form className="row-flex" onSubmit={handleAdd} style={{ marginBottom: '14px' }}>
+            <input 
+              type="text" 
+              className="input" 
+              style={{ flex: 1 }} 
+              placeholder="Введите описание задачи..." 
+              value={input} 
+              onChange={(e) => { setInput(e.target.value); if(error) setError(''); }} 
+            />
+            <button type="submit" className="btn btn-primary">+ Добавить задачу</button>
+          </form>
+
+          {error && <div className="alert-error">{error}</div>}
+
+          <div className="space-between" style={{ marginBottom: '12px', fontSize: '0.86rem', color: 'var(--text-muted)' }}>
+            <span>Выполнено: <strong>{todos.filter(t => t.completed).length}</strong> из <strong>{todos.length}</strong></span>
+          </div>
+
+          <ul style={{ listStyle: 'none' }}>
+            {todos.map(t => (
+              <TodoItem 
+                key={t.id} 
+                id={t.id} 
+                text={t.text} 
+                completed={t.completed} 
+                onToggle={handleToggle} 
+                onDelete={handleDelete} 
+              />
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // 3. ПОВЫШЕННЫЙ УРОВЕНЬ — Вариант 19: Канбан-доска
+    // ==========================================
+    function TaskCard({ task, onMove, onDelete }) {
+      return (
+        <div className="sub-card" style={{ background: 'var(--bg-card)', padding: '12px', marginBottom: '10px' }}>
+          <div className="space-between" style={{ marginBottom: '6px' }}>
+            <span className="tag">{task.tag}</span>
+            <button type="button" className="btn btn-outline btn-sm" style={{ padding: '1px 6px' }} onClick={() => onDelete(task.id)}>✕</button>
+          </div>
+          <div style={{ fontWeight: 600, fontSize: '0.92rem', marginBottom: '10px' }}>{task.title}</div>
+          <div className="space-between">
+            {task.status !== 'todo' ? (
+              <button type="button" className="btn btn-outline btn-sm" onClick={() => onMove(task.id, task.status === 'done' ? 'progress' : 'todo')}>← Назад</button>
+            ) : <span />}
+            {task.status !== 'done' && (
+              <button type="button" className="btn btn-primary btn-sm" onClick={() => onMove(task.id, task.status === 'todo' ? 'progress' : 'done')}>
+                {task.status === 'todo' ? 'В работу →' : 'Готово ✓'}
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function Level3Kanban({ onAction }) {
+      const [cards, setCards] = useState([
+        { id: 101, title: 'Анализ методических требований', tag: 'Архитектура', status: 'done' },
+        { id: 102, title: 'Верстка компонентов React', tag: 'UI / CSS', status: 'progress' },
+        { id: 103, title: 'Заполнение 5 тестов для отчёта', tag: 'Тестирование', status: 'todo' },
+      ]);
+      const [title, setTitle] = useState('');
+
+      const handleCreate = (e) => {
+        e.preventDefault();
+        if (!title.trim()) return;
+        setCards([{ id: Date.now(), title: title.trim(), tag: 'Задача', status: 'todo' }, ...cards]);
+        setTitle('');
+        onAction();
+      };
+
+      const handleMove = (id, newStatus) => {
+        setCards(cards.map(c => c.id === id ? { ...c, status: newStatus } : c));
+        onAction();
+      };
+
+      const handleDelete = (id) => {
+        setCards(cards.filter(c => c.id !== id));
+        onAction();
+      };
+
+      const cols = [
+        { key: 'todo', title: 'Запланировано' },
+        { key: 'progress', title: 'В работе' },
+        { key: 'done', title: 'Выполнено' }
+      ];
+
+      return (
+        <div>
+          <div style={{ marginBottom: '20px' }}>
+            <span className="tag">Вариант 19 • Сложная логика состояний</span>
+            <h2 className="title-serif" style={{ fontSize: '1.8rem', margin: '6px 0' }}>Канбан-доска (KanbanBoard)</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              Родительский компонент хранит единое состояние задач, а дочерний <code>TaskCard</code> вызывает функции перемещения через <strong>props</strong>.
+            </p>
+          </div>
+
+          <form className="row-flex" onSubmit={handleCreate} style={{ marginBottom: '18px' }}>
+            <input 
+              type="text" 
+              className="input" 
+              style={{ flex: 1 }} 
+              placeholder="Название новой карточки..." 
+              value={title} 
+              onChange={(e) => setTitle(e.target.value)} 
+            />
+            <button type="submit" className="btn btn-primary">+ Создать карточку</button>
+          </form>
+
+          <div className="kanban-grid">
+            {cols.map(col => {
+              const colCards = cards.filter(c => c.status === col.key);
+              return (
+                <div key={col.key} className="kanban-col">
+                  <div className="space-between" style={{ borderBottom: '1px solid var(--border-line)', paddingBottom: '8px', marginBottom: '12px' }}>
+                    <strong>{col.title}</strong>
+                    <span className="tag">{colCards.length}</span>
+                  </div>
+                  {colCards.map(c => (
+                    <TaskCard key={c.id} task={c} onMove={handleMove} onDelete={handleDelete} />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // 4. ВКЛАДКА: Отчёт и результаты тестирования
+    // ==========================================
+    function LabReportView() {
+      return (
+        <div style={{ spaceY: '20px' }}>
+          <div>
+            <h2 className="title-serif" style={{ fontSize: '1.8rem', marginBottom: '8px' }}>Отчёт по Лабораторной Работе № 11</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              Дисциплина: «Языки и технология программирования». Тема: Введение в React (Props и State).
+            </p>
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '10px' }}>Таблица 5 обязательных тестов</h3>
+            <table className="table-clean">
+              <thead>
+                <tr>
+                  <th>№</th>
+                  <th>Сценарий</th>
+                  <th>Входное действие</th>
+                  <th>Ожидаемый результат</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1</strong></td>
+                  <td>Начальное состояние</td>
+                  <td>Открытие приложения</td>
+                  <td>Счётчики товаров равны 0, задан начальный список задач</td>
+                  <td><span className="tag">Пройден</span></td>
+                </tr>
+                <tr>
+                  <td><strong>2</strong></td>
+                  <td>Основное действие</td>
+                  <td>Нажатие «+» в карточке товара</td>
+                  <td>Количество увеличивается до 1, автоматически пересчитывается сумма в ₸</td>
+                  <td><span className="tag">Пройден</span></td>
+                </tr>
+                <tr>
+                  <td><strong>3</strong></td>
+                  <td>Повторное действие</td>
+                  <td>Нажатие «В работу →» на Канбан-доске</td>
+                  <td>Карточка перемещается из колонки «Запланировано» в «В работе»</td>
+                  <td><span className="tag">Пройден</span></td>
+                </tr>
+                <tr>
+                  <td><strong>4</strong></td>
+                  <td>Сброс состояния</td>
+                  <td>Уменьшение количества товара до 0</td>
+                  <td>Счётчик сбрасывается, надпись меняется на «Не выбрано»</td>
+                  <td><span className="tag">Пройден</span></td>
+                </tr>
+                <tr>
+                  <td><strong>5</strong></td>
+                  <td>Граничный/некорректный ввод</td>
+                  <td>Отправка пустой строки в TodoList</td>
+                  <td>Добавление блокируется, выводится красное сообщение об ошибке</td>
+                  <td><span className="tag">Пройден</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
+    // ==========================================
+    function App() {
+      const [activeTab, setActiveTab] = useState('level1');
+      const [actionCount, setActionCount] = useState(0);
+
+      const logAction = () => setActionCount(prev => prev + 1);
+
+      return (
+        <div className="container">
+          <header className="header-card">
+            <div className="header-top">
+              <span>Лабораторная работа № 11 • React</span>
+              <span className="pill-badge">Выполнено действий: {actionCount}</span>
+            </div>
+            <h1 className="title-serif">Интерактивный учебный стенд</h1>
+            <p style={{ color: 'var(--text-muted)', marginTop: '6px', fontSize: '0.95rem' }}>
+              Выполнено по одному индивидуальному заданию для каждого из трёх уровней сложности.
+            </p>
+          </header>
+
+          <nav className="nav-tabs">
+            <button 
+              className={`tab-btn ${activeTab === 'level1' ? 'active' : ''}`} 
+              onClick={() => setActiveTab('level1')}
+            >
+              <span>Вариант 7: Карточка товара</span>
+              <span className="tab-level-tag">1. Базовый</span>
+            </button>
+
+            <button 
+              className={`tab-btn ${activeTab === 'level2' ? 'active' : ''}`} 
+              onClick={() => setActiveTab('level2')}
+            >
+              <span>Вариант 8: Список задач</span>
+              <span className="tab-level-tag">2. Средний</span>
+            </button>
+
+            <button 
+              className={`tab-btn ${activeTab === 'level3' ? 'active' : ''}`} 
+              onClick={() => setActiveTab('level3')}
+            >
+              <span>Вариант 19: Канбан-доска</span>
+              <span className="tab-level-tag">3. Повышенный</span>
+            </button>
+
+            <button 
+              className={`tab-btn ${activeTab === 'report' ? 'active' : ''}`} 
+              onClick={() => setActiveTab('report')}
+            >
+              <span>Отчёт и результаты тестов</span>
+              <span className="tab-level-tag">Защита</span>
+            </button>
+          </nav>
+
+          <main className="workspace">
+            {activeTab === 'level1' && <Level1Catalog onAction={logAction} />}
+            {activeTab === 'level2' && <Level2TodoList onAction={logAction} />}
+            {activeTab === 'level3' && <Level3Kanban onAction={logAction} />}
+            {activeTab === 'report' && <LabReportView />}
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
