@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT-демо и инспектор токенов | Лабораторная работа №12 (Вариант 15)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="brand">JWT Security Lab — Проверка подписи и срока действия</div>
+    <div class="badge">Средний уровень • Вариант 15 (Short-Lived JWT)</div>
+  </header>
+
+  <main>
+    <section class="card" id="loginSection">
+      <h2>Получение короткоживущего JWT</h2>
+      <p class="subtitle">Токен хранится исключительно в памяти (JS-переменной), а не в localStorage (защита от XSS). TTL = 45 секунд.</p>
+
+      <div class="creds-hint">
+        <strong>Тестовые учетные записи:</strong><br>
+        • Студент: <code>dev_arman</code> / <code>JwtSecret#1</code> (роль: <code>student</code>)<br>
+        • Преподаватель: <code>prof_dana</code> / <code>Teacher#2026</code> (роль: <code>teacher</code>)
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="login">Логин</label>
+            <input id="login" type="text" placeholder="dev_arman или prof_dana">
+          </div>
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input id="password" type="password" placeholder="Введите пароль">
+          </div>
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn-primary">Войти и получить JWT</button>
+          <button type="button" class="btn-secondary" id="callWithoutTokenBtn">Запрос без токена (Тест 401)</button>
+        </div>
+      </form>
+
+      <div id="loginAlert" class="alert"></div>
+    </section>
+
+    <section class="card" id="dashboardSection" hidden>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+        <div>
+          <h2>Защищенный раздел (JWT проверен)</h2>
+          <p class="subtitle" style="margin-bottom:0;">Сервер проверяет <code>alg === HS256</code>, подпись HMAC, <code>exp</code>, <code>iss</code> и <code>aud</code></p>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <span class="timer-pill" id="jwtTimer">TTL: 45 сек</span>
+          <button type="button" class="btn-danger" id="logoutBtn">Выйти и отозвать JWT</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:1rem; color:var(--primary);">Данные пользователя с сервера</h3>
+          <ul class="info-list">
+            <li><span class="label">ФИО:</span> <span class="val" id="userName">—</span></li>
+            <li><span class="label">Роль:</span> <span class="val" id="userRole">—</span></li>
+            <li><span class="label">Кафедра:</span> <span class="val" id="userDept">—</span></li>
+          </ul>
+
+          <div class="btn-group">
+            <button type="button" class="btn-primary" id="refreshProtectedBtn">Обновить защищенные данные</button>
+            <button type="button" class="btn-secondary" id="tamperTokenBtn">Подделать payload токена (Тест 401)</button>
+            <button type="button" class="btn-secondary" id="teacherRouteBtn">Маршрут преподавателя (Тест 403)</button>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size:1rem; color:var(--primary);">Декодированный Payload (JWT не шифрует данные!)</h3>
+          <pre class="token-box" id="decodedClaimsBox">{}</pre>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;">
+        <h3 style="font-size:1rem; color:var(--primary);">Текущий JWT (Header.Payload.Signature)</h3>
+        <div class="token-box" id="rawTokenBox"></div>
+      </div>
+
+      <div id="dashAlert" class="alert"></div>
+    </section>
+  </main>
+
+  <footer>
+    Лабораторная работа №12 • Вариант 15 • Проверка целостности и срока действия JSON Web Token
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

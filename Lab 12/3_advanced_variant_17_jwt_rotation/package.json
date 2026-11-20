@@ -1,0 +1,12 @@
+{
+  "name": "lab12-advanced-variant17-jwt-rotation",
+  "version": "1.0.0",
+  "description": "Лабораторная работа 12 (Повышенный уровень, Вариант 17): Короткий Access Token и ротация Refresh Token с защитой от повторного использования",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "lab12-basic-variant1-student-cabinet",
+  "version": "1.0.0",
+  "description": "Лабораторная работа 12 (Базовый уровень, Вариант 1): Личный кабинет студента с серверной сессией",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

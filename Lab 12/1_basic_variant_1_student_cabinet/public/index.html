@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет студента | Лабораторная работа №12 (Вариант 1)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="brand">Университетский портал — Личный кабинет студента</div>
+    <div class="badge">Базовый уровень • Вариант 1 (Server Session)</div>
+  </header>
+
+  <main>
+    <!-- Блок входа -->
+    <section class="card" id="loginCard">
+      <h2>Вход в систему</h2>
+      <p class="subtitle">Аутентификация через серверную сессию и защищенную cookie (HttpOnly, SameSite=Strict)</p>
+
+      <div class="creds-hint">
+        <strong>Тестовые учетные записи:</strong><br>
+        1) Логин: <code>student_alibek</code> | Пароль: <code>Pass1234!</code> (ID: 101)<br>
+        2) Логин: <code>student_madina</code> | Пароль: <code>Study2026!</code> (ID: 102)
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="login">Логин студента</label>
+          <input id="login" name="login" type="text" placeholder="Например: student_alibek" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <input id="password" name="password" type="password" placeholder="Введите пароль" autocomplete="current-password">
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn-primary">Войти в кабинет</button>
+          <button type="button" class="btn-secondary" id="testUnauthorizedBtn">Запросить профиль без входа (Тест 401)</button>
+        </div>
+      </form>
+
+      <div id="statusAlert" class="alert"></div>
+    </section>
+
+    <!-- Защищенный кабинет студента -->
+    <section class="card" id="cabinetCard" hidden>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+        <div>
+          <h2 id="studentName">Профиль студента</h2>
+          <p class="subtitle" style="margin-bottom:0;">Данные получены с защищенного маршрута <code>GET /api/profile</code></p>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <span class="timer-pill" id="sessionTimer">Сессия: 02:00</span>
+          <button type="button" class="btn-danger" id="logoutBtn">Выйти</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:1rem; color:var(--primary); margin-bottom:0.5rem;">Учебные сведения</h3>
+          <ul class="info-list">
+            <li><span class="label">ID студента:</span> <span class="val" id="infoId">—</span></li>
+            <li><span class="label">Логин:</span> <span class="val" id="infoLogin">—</span></li>
+            <li><span class="label">Академическая группа:</span> <span class="val" id="infoGroup">—</span></li>
+            <li><span class="label">Текущий GPA:</span> <span class="val" id="infoGpa">—</span></li>
+            <li><span class="label">Стипендия:</span> <span class="val" id="infoScholarship">—</span></li>
+          </ul>
+
+          <div class="btn-group">
+            <button type="button" class="btn-secondary" id="testForeignBtn">Открыть чужой профиль ID=102 (Тест 403)</button>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size:1rem; color:var(--primary); margin-bottom:0.5rem;">Успеваемость по дисциплинам</h3>
+          <table>
+            <thead>
+              <tr><th>Код</th><th>Дисциплина</th><th>Оценка</th></tr>
+            </thead>
+            <tbody id="coursesBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;">
+        <h3 style="font-size:1rem; color:var(--primary); margin-bottom:0.5rem;">Журнал безопасности (Аудит входов)</h3>
+        <table>
+          <thead>
+            <tr><th>Время</th><th>Логин</th><th>Событие</th></tr>
+          </thead>
+          <tbody id="auditBody"></tbody>
+        </table>
+      </div>
+
+      <div id="cabinetAlert" class="alert"></div>
+    </section>
+  </main>
+
+  <footer>
+    Лабораторная работа №12 • Аутентификация и управление сессиями • Безопасное хранение cookie (HttpOnly)
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

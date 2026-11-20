@@ -1,0 +1,12 @@
+{
+  "name": "lab12-medium-variant15-jwt-demo",
+  "version": "1.0.0",
+  "description": "Лабораторная работа 12 (Средний уровень, Вариант 15): JWT-демо с проверкой подписи, алгоритма и срока действия",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
